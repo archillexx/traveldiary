@@ -1,7 +1,6 @@
 import { Container, Title, Text, Button, Group, Image, Stack } from '@mantine/core';
 import { Link } from 'react-router-dom';
-import heroImg from '../assets/hero.svg'; // Optional image (add your own)
-
+import heroImg from '../assets/hero.svg'; 
 export default function HeroSection() {
   return (
     <section style={{ padding: '6rem 0', backgroundColor: '#ffffff' ,width:'100%'}}>
@@ -14,14 +13,7 @@ export default function HeroSection() {
             A place to log your travel destinations and experiences. Share your journey with the world and explore stories from fellow travelers.
           </Text>
 
-         {/*} <Group mt="xl">
-            <Button component={Link} to="/signup" size="md">
-              Get Started
-            </Button>
-            <Button component={Link} to="/about" variant="default" size="md">
-              Learn More
-            </Button>
-          </Group>*/}
+         
         </Stack>
 
         <div style={{ flex: 1, minWidth: 300 }}>

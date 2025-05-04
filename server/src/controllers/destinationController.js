@@ -1,7 +1,99 @@
 const Destination = require('../models/destination');
+const mongoose = require('mongoose')
 
-// Add a new destination
-// Add a new destination
+
+const getSavedDestinations = async (req, res) => {
+  
+  const userId = req.user._id;
+
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 4;
+  const skip = (page - 1) * limit;
+
+  try {
+    const savedDestinationIds = req.user.saved.map((e) => new mongoose.Types.ObjectId(e));
+    
+    
+    const total = await Destination.countDocuments({ _id: { $in: savedDestinationIds } });
+
+    const savedDestinations = await Destination.find({ _id: { $in: savedDestinationIds } })
+      .populate('categories')
+      .populate('userId', 'name')
+      .skip(skip)
+      .limit(limit);
+
+    res.status(200).json({
+      data: savedDestinations,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    });
+  } catch (error) {
+    console.error('Error fetching saved destinations:', error);
+    res.status(500).json({ message: 'Error fetching saved destinations' });
+  }
+};
+
+
+
+
+const toggleSaved = async (req, res) => {
+  const { id } = req.params;
+  const userId = req.user._id; 
+
+  try {
+    const destination = await Destination.findById(id);
+    if (!destination) {
+      return res.status(404).json({ message: 'Destination not found' });
+    }
+
+    
+    if (destination.saved.includes(userId)) {
+      
+      destination.saved = destination.saved.filter(user => user.toString() !== userId.toString());
+    } else {
+      
+      destination.saved.push(userId);
+      req.user.saved.push(destination._id);
+
+    }
+
+    await destination.save();
+    await req.user.save();
+    res.status(200).json({ message: 'Favorite status updated', destination });
+  } catch (error) {
+    console.error('Error toggling saved:', error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+const getAllDestinations = async (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 6;
+  const skip = (page - 1) * limit;
+
+  try {
+    const total = await Destination.countDocuments();
+
+    const destinations = await Destination.find()
+      .populate('userId', 'name') 
+      .populate('categories')      
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      data: destinations,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
 const addDestination = async (req, res) => {
     const { destination, description, date, photoUrl, latitude, longitude, categories } = req.body;
   
@@ -25,7 +117,7 @@ const addDestination = async (req, res) => {
   };
   
 
-// Get all destinations for a specific user
+
 const getDestinations = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 6;
@@ -35,6 +127,7 @@ const getDestinations = async (req, res) => {
       const total = await Destination.countDocuments({ userId: req.user._id });
   
       const destinations = await Destination.find({ userId: req.user._id })
+        .populate('userId', 'name')
         .populate('categories')
         .skip(skip)
         .limit(limit);
@@ -52,14 +145,14 @@ const getDestinations = async (req, res) => {
   
 
 
-// Update a destination
+
 const updateDestination = async (req, res) => {
     const { destination, description, date, photoUrl, categories } = req.body;
     try {
         const destinationEntry = await Destination.findById(req.params.id);
         if (!destinationEntry) return res.status(404).json({ message: 'Destination not found' });
 
-        // Only allow the owner to update
+        
         if (destinationEntry.userId.toString() !== req.user.id) {
             return res.status(401).json({ message: 'Unauthorized' });
         }
@@ -76,7 +169,7 @@ const updateDestination = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
-// Delete a destination
+
 const deleteDestination = async (req, res) => {
   const { id } = req.params;
 
@@ -97,6 +190,9 @@ const deleteDestination = async (req, res) => {
 module.exports = {
   addDestination,
   getDestinations,
+  getAllDestinations,
   updateDestination,
   deleteDestination,
+  toggleSaved,
+  getSavedDestinations,
 };

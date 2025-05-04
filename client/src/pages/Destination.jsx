@@ -40,6 +40,8 @@ export default function DestinationPage() {
     }
   };
 
+  
+
   useEffect(() => {
     setLoading(true);
     getDestinations(currentPage);
@@ -66,7 +68,7 @@ export default function DestinationPage() {
         Travel Diary Destinations
       </Title>
 
-      {/* Action Buttons */}
+      
       <Center mb="xl">
         <Group>
           <Button onClick={() => setDestinationModalOpened(true)} variant="filled" color="blue">
@@ -75,7 +77,7 @@ export default function DestinationPage() {
         </Group>
       </Center>
 
-      {/* Add Destination Modal */}
+      
       <Modal
         opened={destinationModalOpened}
         onClose={() => setDestinationModalOpened(false)}
@@ -98,10 +100,10 @@ export default function DestinationPage() {
           <DestinationCard
               key={dest._id}
               destination={dest}
-              onDelete={() => getDestinations(currentPage)} // refresh after delete
-              onUpdate={() => getDestinations(currentPage)} // refresh after update
+              onDelete={() => getDestinations(currentPage)} 
+              onUpdate={() => getDestinations(currentPage)} 
             />
-          ))}
+        ))}
           </SimpleGrid>
 
           <Center mt="xl">

@@ -24,7 +24,7 @@ export default function CategoryCard({ category, onDelete, onUpdate }) {
         },
       });
 
-      onUpdate(); // Notify parent to refresh categories
+      onUpdate(); 
       setIsEditModalOpen(false);
     } catch (err) {
       console.error('Error updating category:', err);
@@ -46,7 +46,7 @@ export default function CategoryCard({ category, onDelete, onUpdate }) {
         },
       });
 
-      onDelete(); // Notify parent to remove the category
+      onDelete();
     } catch (err) {
       console.error('Error deleting category:', err);
     }
@@ -84,3 +84,4 @@ export default function CategoryCard({ category, onDelete, onUpdate }) {
     </Paper>
   );
 }
+ 

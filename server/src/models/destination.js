@@ -41,7 +41,8 @@ const destinationSchema = new mongoose.Schema({
     categories: [{
         type: mongoose.Schema.ObjectId,
         ref: "Category",
-    }]
+    }],
+    saved: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
 module.exports = mongoose.model('Destination', destinationSchema);

@@ -10,8 +10,8 @@ import {
 } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
 import axiosInstance from '../axiosConfig';
-import CategoryCard from '../components/CategoryCard'; // CategoryCard component
-import AddCategory from '../components/AddCategory';   // AddCategory component
+import CategoryCard from '../components/CategoryCard';
+import AddCategory from '../components/AddCategory';   
 
 export default function Category() {
   const [categories, setCategories] = useState([]);
@@ -19,7 +19,7 @@ export default function Category() {
   const [modalOpened, setModalOpened] = useState(false);
   const navigate = useNavigate();
 
-  // Fetch categories from the backend
+  
   const getCategories = async () => {
     const token = localStorage.getItem('jwt');
     try {
@@ -40,7 +40,7 @@ export default function Category() {
     getCategories();
   }, []);
 
-  // Handle adding a new category
+ 
   const handleAddCategory = async (newCategory) => {
     const token = localStorage.getItem('jwt');
     try {
@@ -50,7 +50,7 @@ export default function Category() {
         }
       });
       setModalOpened(false);
-      getCategories(); // Re-fetch categories after adding a new one
+      getCategories(); 
     } catch (err) {
       console.error('Error adding category:', err);
     }
@@ -62,14 +62,14 @@ export default function Category() {
         Category List
       </Title>
 
-      {/* Add Category Button */}
+      
       <Center mb="xl">
         <Button onClick={() => setModalOpened(true)} variant="filled" color="blue">
           Add New Category
         </Button>
       </Center>
 
-      {/* Modal to add a category */}
+      
       <Modal opened={modalOpened} onClose={() => setModalOpened(false)} title="Add New Category" size="lg">
       <AddCategory
             opened={modalOpened}
@@ -79,7 +79,7 @@ export default function Category() {
         />
       </Modal>
 
-      {/* Show categories */}
+      
       {loading ? (
         <Text align="center">Loading categories...</Text>
       ) : (
@@ -88,8 +88,8 @@ export default function Category() {
             <CategoryCard
               key={cat._id}
               category={cat}
-              onDelete={() => getCategories()} // Refresh categories on delete
-              onUpdate={() => getCategories()} // Refresh categories after update
+              onDelete={() => getCategories()}
+              onUpdate={() => getCategories()} 
             />
           ))}
         </SimpleGrid>

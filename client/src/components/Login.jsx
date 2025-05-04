@@ -25,15 +25,20 @@ export default function Login({setToken}) {
           email,
           password,
         });
+        console.log(response.data);
   
-        const { token } = response.data;
+        const { token,id } = response.data;
   
-        // Store the token
+        
         localStorage.setItem('jwt', token);
+        localStorage.setItem('user_id',id );
+
         setToken(token)
-        // Redirect
-        navigate('/destinations');
+        
+        navigate('/all');
       } catch (err) {
+        console.log(err);
+        
         setError(err.response?.data?.message || 'Login failed');
       } finally {
         setLoading(false);

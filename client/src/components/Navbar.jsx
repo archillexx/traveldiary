@@ -37,13 +37,19 @@ import {
             <Image src={logo} alt="Logo" height={40} />
           </Link>
   
-          {/* Desktop View */}
+          
           <Group visibleFrom="sm" spacing="md">
             {token ? (
               <>
-                <Button component={Link} to="/destinations" variant="subtle">
-                  Destinations
-                </Button>
+                <Button component={Link} to="/all" onClick={close}>
+                    Destinations
+                  </Button>
+                  <Button component={Link} to="/destinations" onClick={close}>
+                    My Destinations
+                  </Button>
+                  <Button component={Link} to="/saved" variant="subtle" onClick={close}>
+                    Saved
+                  </Button>
                 <Button component={Link} to="/categories" variant="subtle">
                   Categories
                 </Button>
@@ -68,7 +74,7 @@ import {
   
           <Burger opened={opened} onClick={toggle} hiddenFrom="sm" />
   
-          {/* Mobile Drawer */}
+          
           <Drawer
             opened={opened}
             onClose={close}
@@ -79,9 +85,15 @@ import {
           >
             <Stack spacing="md">
               {token ? (
-                <>
-                  <Button component={Link} to="/destinations" onClick={close}>
+                <> 
+                  <Button component={Link} to="/all" onClick={close}>
                     Destinations
+                  </Button>
+                  <Button component={Link} to="/destinations" onClick={close}>
+                    My Destinations
+                  </Button>
+                  <Button component={Link} to="/saved" onClick={close}>
+                    Saved
                   </Button>
                   <Button component={Link} to="/categories" onClick={close}>
                     Categories

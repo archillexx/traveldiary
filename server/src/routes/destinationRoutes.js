@@ -1,22 +1,29 @@
 const express = require('express');
-const { addDestination, getDestinations, getAllDestinations, updateDestination, deleteDestination } = require('../controllers/destinationController');
+const { addDestination, getDestinations, getAllDestinations, updateDestination, deleteDestination, toggleSaved, getSavedDestinations} = require('../controllers/destinationController');
 const { protect } = require('../middleware/authMiddleware');
-//const commentRoutes = require('./commentRoutes');
+
 
 const router = express.Router();
 
-// Get user's destinations and add a new destination
+
+
+
 router.route('/')
   .get(protect, getDestinations)
   .post(protect, addDestination);
 
+router.get('/all',getAllDestinations);
 
 
-// Update and delete a destination by ID
-router.route('/:id')
+
+
+router.route('/:id') 
   .put(protect, updateDestination)
   .delete(protect, deleteDestination);
 
-//router.use('/:destinationId/comments', commentRoutes);
 
+router.post('/:id/saved', protect, toggleSaved);
+
+
+router.get('/saved', protect, getSavedDestinations);
 module.exports = router;

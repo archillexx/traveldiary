@@ -11,6 +11,7 @@ const {
 
 router.get('/', getAllCategories);
 
+
 router.post('/', addCategory);
 
 

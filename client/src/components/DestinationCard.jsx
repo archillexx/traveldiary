@@ -1,10 +1,16 @@
-import React, { useState } from 'react';
-import { Image, Text, Divider, Title, Paper, Button, Modal, TextInput, Textarea } from '@mantine/core';
+import React, { useEffect, useCallback,useState } from 'react';
+import { throttle } from 'lodash'
+import { Group,Image, Text, Divider, Title, Paper, Button, Modal, TextInput, Textarea, ActionIcon } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
+import { FaRegHeart, FaHeart } from 'react-icons/fa';
+
 import axiosInstance from '../axiosConfig';
 
 export default function DestinationCard({ destination, onDelete, onUpdate }) {
+ const user_id =  localStorage.getItem('user_id')
+
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(destination.isSaved || false); 
   const [updatedDestination, setUpdatedDestination] = useState({
     destinationName: destination.destination,
     description: destination.description,
@@ -15,6 +21,39 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
     longitude: destination.longitude || '',
     categories: destination.categories.map((category) => category._id),
   });
+
+  useEffect(() => {
+    const a= []
+    a.includes()
+    if(destination.saved.includes(user_id)) {
+      setIsSaved(true)
+    }
+  },[destination.saved, user_id])
+
+  
+  const handleSavedToggle = useCallback(
+    throttle(async () => {
+      console.log('Saving toggled'); 
+  
+      const token = localStorage.getItem('jwt');
+      if (!token) {
+        console.error('No token found, unauthorized request');
+        return;
+      }
+  
+      try {
+        await axiosInstance.post(`/api/destinations/${destination._id}/saved`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setIsSaved((prev) => !prev);
+      } catch (err) {
+        console.error('Error toggling favorite:', err);
+      }
+    }, 2000, { trailing: false }), 
+    [destination._id] 
+  );
 
   const handleEditSubmit = async () => {
     const token = localStorage.getItem('jwt');
@@ -49,7 +88,6 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
   };
 
   const handleDelete = async () => {
-    console.log(destination._id)
     const token = localStorage.getItem('jwt');
     if (!token) {
       console.error('No token found, unauthorized request');
@@ -69,13 +107,17 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
     }
   };
 
-  // Link to Google Maps or OpenStreetMap
+  
   const mapLink = `https://www.google.com/maps?q=${destination.latitude},${destination.longitude}`;
 
+ 
+ 
   return (
     <Paper shadow="sm" p="md" withBorder style={{ textAlign: 'center' }}>
       <Title order={4}>{destination.destination}</Title>
-
+      <Text size="xs" color="gray" mt="xs">
+        Posted by: {destination.userId?.name || 'Unknown'}
+        </Text>
       <Text size="sm" color="dimmed">{destination.location}</Text>
 
       {destination.latitude && destination.longitude && (
@@ -109,7 +151,7 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
         </Text>
       )}
 
-      {/* Add the map link here */}
+     
       {destination.latitude && destination.longitude && (
         <Button
           variant="outline"
@@ -123,14 +165,25 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
         </Button>
       )}
 
-      <Button variant="outline" color="blue" onClick={() => setIsEditModalOpen(true)} mt="md">
-        Edit
-      </Button>
-      <Button variant="outline" color="red" onClick={handleDelete} mt="md">
-        Delete
-      </Button>
+      <Group position="apart" mt="md">
+        
+        <ActionIcon onClick={handleSavedToggle}>
+        {isSaved ? <FaHeart color="red" /> : <FaRegHeart />}
+        </ActionIcon>
+        {user_id === destination.userId && (
+        <Group>
+          <Button variant="outline" color="blue" onClick={() => setIsEditModalOpen(true)} mt="md">
+            Edit
+          </Button>
+          <Button variant="outline" color="red" onClick={handleDelete} mt="md">
+            Delete
+          </Button>
+        </Group>
+      )}
 
-      {/* Edit Modal */}
+      </Group>
+
+     
       <Modal opened={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} title="Edit Destination">
         <TextInput
           label="Title"

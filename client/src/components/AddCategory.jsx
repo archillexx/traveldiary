@@ -17,7 +17,7 @@ const AddCategory = ({
       setName(selectedCategory.name || '');
       setDescription(selectedCategory.description || '');
     } else if (!isUpdateMode && opened) {
-      // Reset fields for new category
+      
       setName('');
       setDescription('');
     }
