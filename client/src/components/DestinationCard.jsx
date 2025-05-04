@@ -170,16 +170,16 @@ export default function DestinationCard({ destination, onDelete, onUpdate }) {
         <ActionIcon onClick={handleSavedToggle}>
         {isSaved ? <FaHeart color="red" /> : <FaRegHeart />}
         </ActionIcon>
-        {user_id === destination.userId && (
-        <Group>
-          <Button variant="outline" color="blue" onClick={() => setIsEditModalOpen(true)} mt="md">
-            Edit
-          </Button>
-          <Button variant="outline" color="red" onClick={handleDelete} mt="md">
-            Delete
-          </Button>
-        </Group>
-      )}
+        {user_id === destination.userId?._id && (
+  <Group>
+    <Button variant="outline" color="blue" onClick={() => setIsEditModalOpen(true)} mt="md">
+      Edit
+    </Button>
+    <Button variant="outline" color="red" onClick={handleDelete} mt="md">
+      Delete
+    </Button>
+  </Group>
+)}
 
       </Group>
 
