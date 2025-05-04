@@ -2,7 +2,7 @@
   "name": "traveldiary",
   "version": "1.0.0",
   "description": "A solo travel logging app",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "start": "nodemon",
     "test": "echo \"Error: no test specified\" && exit 1"

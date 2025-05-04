@@ -1,6 +1,6 @@
 # IFN666_25se1 Assessment 02 Submission
 
-**Student name:**  Jake Bradford
+**Student name:**  Ashwin Suresh
 
 **Student ID:** n12113395 
 
